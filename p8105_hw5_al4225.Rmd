@@ -123,3 +123,17 @@ prop_test %>%
   broom::tidy()
 ```
 
+
+### prop.test for each city
+Now run prop.test for each of the cities in your dataset, and extract both the proportion of unsolved homicides and the confidence interval for each. Do this within a “tidy” pipeline, making use of purrr::map, purrr::map2, list columns and unnest as necessary to create a tidy dataframe with estimated proportions and CIs for each city.
+```{r}
+total_unsolved_cities = 
+  homicide %>%
+  group_by(city_state) %>% 
+  summarise(
+    unsolved_cities = sum(disposition_situation == "unsolved"),
+    n_cities = n()
+  )
+
+total_unsolved_cities
+```
