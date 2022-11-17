@@ -214,3 +214,28 @@ sim_results_df =
   mutate(test_result = ifelse(p.value < 0.05, "reject H0", "fail to reject H0"))
 sim_results_df
 ```
+
+### True_mean-power plot
+The proportions of times the null was rejected (the power of the test) are between 0 and 1. Other conditions remain the same, the power and effect size are positive associated. The greater the difference between the true and estimated values of the population parameters, the greater the power. It can also be said that the larger the effect size, the greater the efficacy.
+```{r True_mean-power plot}
+n_obs_reject_df =
+sim_results_df %>% 
+  group_by(true_mean) %>% 
+  filter(test_result == "reject H0") %>%
+  summarize(
+    n_obs_reject = n()) %>%
+  mutate(percent = n_obs_reject / 5000) %>%
+  ggplot(aes(x = true_mean, y = percent)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  labs(
+    title = "True_mean-power plot",
+    x = "True mean",
+    y = "The power of the test") +
+  theme(legend.position = "bottom") +
+  theme(axis.text.x = element_text(hjust = 1, vjust = .5),
+        plot.title = element_text(hjust = 0.5))
+
+n_obs_reject_df
+```
+
