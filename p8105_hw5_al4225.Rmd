@@ -92,3 +92,34 @@ unsoved_homicides =
   arrange(desc(n_obs))
 unsoved_homicides
 ```
+
+
+### prop.test
+For the city of Baltimore, MD, use the prop.test function to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object, apply the broom::tidy to this object and pull the estimated proportion and confidence intervals from the resulting tidy dataframe.    
+**Description**:    
+For Baltimore, MD, the estimated proportion of homicides that are unsolved is 0.6455607. The confidence interval is (0.6275625, 0.6631599) in α=0.05 level which means that we are 95% confident that the true proportion of homicides that are unsolved lies in this interval. It concludes the estimated value.
+```{r}
+Baltimore = 
+homicide %>%
+  filter(city_state == "Baltimore, MD")
+
+total_unsolved_Baltimore = 
+  Baltimore %>%
+  summarise(
+    unsolved = sum(disposition_situation == "unsolved"),
+    n = n()
+  )
+
+total_unsolved_Baltimore
+
+prop_test = 
+  prop.test(
+    x = total_unsolved_Baltimore %>% pull(unsolved),
+    n = total_unsolved_Baltimore %>% pull(n)
+  )
+prop_test
+
+prop_test %>%
+  broom::tidy()
+```
+
