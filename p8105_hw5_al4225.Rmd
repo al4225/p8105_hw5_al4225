@@ -264,3 +264,30 @@ avg_true_mean_plot =
         plot.title = element_text(hjust = 0.5))
 avg_true_mean_plot
 ```
+
+### Avg_reject_true_mean_plot
+Make a second plot (or overlay on the first) the average estimate of μ^ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis. 
+
+```{r Avg_true_mean_plot(reject null)}
+average_true_mean_reject =
+  sim_results_df %>%
+  group_by(true_mean) %>% 
+    filter(test_result == "reject H0") %>%
+  summarise(average_mean_rejected = mean(estimate)) 
+average_true_mean_reject
+
+avg_rej_true_mean_plot = 
+  average_true_mean_reject %>%
+  ggplot(aes(x = true_mean, y = average_mean_rejected)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  labs(
+    title = "Avg_true_mean_plot(reject null)",
+    x = "True mean",
+    y = "Average estimate mean(reject null)") +
+  theme(legend.position = "bottom") +
+  theme(axis.text.x = element_text(hjust = 1, vjust = .5),
+        plot.title = element_text(hjust = 0.5))
+avg_rej_true_mean_plot
+
+```
