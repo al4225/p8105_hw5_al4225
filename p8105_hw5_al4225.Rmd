@@ -239,3 +239,28 @@ sim_results_df %>%
 n_obs_reject_df
 ```
 
+### Avg_true_mean_plot
+Make a plot showing the average estimate of μ^ on the y axis and the true value of μ on the x axis.    
+**Description**:     
+The line is a y = x line, because the average mean is equal to true mean.
+```{r Avg_true_mean_plot}
+average_true_mean =
+  sim_results_df %>%
+  group_by(true_mean) %>% 
+  summarise(average_mean = mean(estimate)) 
+average_true_mean
+
+avg_true_mean_plot = 
+  average_true_mean %>%
+  ggplot(aes(x = true_mean, y = average_mean)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  labs(
+    title = "Avg_true_mean_plot",
+    x = "True mean",
+    y = "Average estimate mean") +
+  theme(legend.position = "bottom") +
+  theme(axis.text.x = element_text(hjust = 1, vjust = .5),
+        plot.title = element_text(hjust = 0.5))
+avg_true_mean_plot
+```
