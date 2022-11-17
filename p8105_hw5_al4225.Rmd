@@ -291,3 +291,35 @@ avg_rej_true_mean_plot =
 avg_rej_true_mean_plot
 
 ```
+
+### Merged plot   
+Is the sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ? Why or why not?       
+**Description:**       
+According to the merged plot, the two lines are not the same but similar. They are both near y = x line. So the sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ. The reason is that the underlying population distributions of these two types are the same and they are randomly generated. When true mean = 0, the two points are almost the same. When true mean = 1 and 2, some samples with large means are rejected so the average estimated mean of rejected samples is larger than the total estimated mean. With the power and effective size increase, the average mean of rejected sample will be more close to the true mean. 
+```{r merge_plot}
+merge = 
+  merge(average_true_mean, average_true_mean_reject, by = "true_mean", all.y = T) 
+merge
+
+merge_plot = 
+  merge %>%
+  pivot_longer(
+    average_mean:average_mean_rejected,
+    names_to = "estimated_mean_type", 
+    values_to = "average_mean"
+  ) %>%
+  ggplot(aes(x = true_mean, y = average_mean, color = estimated_mean_type)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  labs(
+    title = "Avg_true_mean_plot",
+    x = "True mean",
+    y = "Average estimate mean") +
+  theme(legend.position = "right") +
+  theme(axis.text.x = element_text(hjust = 1, vjust = .5),
+        plot.title = element_text(hjust = 0.5))
+merge_plot
+
+```
+
+
