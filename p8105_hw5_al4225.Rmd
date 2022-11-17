@@ -176,3 +176,41 @@ results_cities %>%
         plot.title = element_text(hjust = 0.5))
 results_cities_plot
 ```
+
+## Problem 3
+When designing an experiment or analysis, a common question is whether it is likely that a true effect will be detected – put differently, whether a false null hypothesis will be rejected. The probability that a false null hypothesis is rejected is referred to as power, and it depends on several factors, including: the sample size; the effect size; and the error variance. In this problem, you will conduct a simulation to explore power in a one-sample t-test.  
+
+### the t-test
+First set the following design elements:   
+
+Fix n=30   
+Fix σ=5   
+Set μ=0. Generate 5000 datasets from the model.   
+x∼Normal[μ,σ]   
+
+For each dataset, save μ^ and the p-value arising from a test of H:μ=0 using α=0.05. Hint: to obtain the estimate and p-value, use broom::tidy to clean the output of t.test.   
+Repeat the above for μ={1,2,3,4,5,6}.    
+
+**Description**:   
+First, I write a function to conduct the t-test of norm and map μ = 0,1,2,3,4,5,6 to this function then we get the p-value summary table below.
+```{r}
+sim_t_test = 
+  function(true_mean){
+    sample = tibble(rnorm(30, mean = true_mean, sd = 5))
+    
+    test_result = t.test(sample)
+    
+    test_result %>%
+      broom::tidy()
+  }
+
+sim_results_df = 
+  expand_grid(
+    true_mean = 0:6,
+    iter = 1:5000) %>%
+  mutate(estimate_df = map(true_mean, sim_t_test)) %>%
+  unnest(estimate_df) %>%
+  select(true_mean, iter, estimate, p.value) %>%
+  mutate(test_result = ifelse(p.value < 0.05, "reject H0", "fail to reject H0"))
+sim_results_df
+```
