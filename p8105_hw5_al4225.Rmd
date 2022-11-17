@@ -27,4 +27,19 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
-
+## Problem 2
+### Raw data
+**Describe the raw data.**    
+In this raw dataset, it contains information about homicides in 50 large U.S. cities. There are `r homicide_data = read_csv("./data/homicide-data.csv",
+                col_names = TRUE) %>%
+  janitor::clean_names() 
+  nrow(homicide_data)` observations and `r homicide_data = read_csv("./data/homicide-data.csv",
+                col_names = TRUE) %>%
+  janitor::clean_names()
+  ncol(homicide_data)` variables. Some key variables such like victim_last, victim_first, victim_race, victim_age, victim_sex discribe victims' basic information about their name, race, age and sex. Some key variables such like reported_date, city, state, lat, lon describe the basic information about the date and location of homicides in U.S.. The variable disposition reflects the disposition of the murders.
+```{r}
+homicide_data = read_csv("./data/homicide-data.csv",
+                col_names = TRUE) %>%
+  janitor::clean_names() 
+homicide_data
+```
