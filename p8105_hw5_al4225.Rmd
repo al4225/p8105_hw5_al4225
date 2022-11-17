@@ -43,3 +43,52 @@ homicide_data = read_csv("./data/homicide-data.csv",
   janitor::clean_names() 
 homicide_data
 ```
+
+
+### Homicides
+Create a city_state variable (e.g. “Baltimore, MD”) and then summarize within cities to obtain the total number of homicides and the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).
+
+**Discriptions**:     
+First, I created a city_state variable to show the summarized information of location like “Baltimore, MD”. Then I noticed that one homocide‘s city_state is wrong which is "Tulsa, AL" so I delete this row because we don’t know whether the city name or the state name is wrong. Then I summarized the total number of homicides and the number of unsolved homicides by cities.     
+The total number of homicides of all cities is `r homicide = 
+  homicide_data %>%
+  mutate(
+    city_state = str_c(city, ", ", state)) %>%
+  mutate(disposition_situation = ifelse(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved", "solved")) %>%
+  filter(city_state != "Tulsa, AL")
+  nrow(homicide)`. The total number of unsolved homicides in all cities is `r homicide %>%
+  filter(disposition_situation == "unsolved") %>%
+  nrow()`. In each city, the total and unsolved number of homicides in each city are shown below. We can see that Chicago, IL has the largest total(5535) and unsolved(4073) number of homicides so the city is relatively dangeous. Tampa, FL has the minimum total(208) and unsolved(95) number of homicides so the city is relatively safe.
+```{r}
+homicide = 
+  homicide_data %>%
+  mutate(
+    city_state = str_c(city, ", ", state)) %>%
+  mutate(disposition_situation = ifelse(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved", "solved")) %>%
+  filter(city_state != "Tulsa, AL")
+
+nrow(homicide)
+
+total_homicide = 
+homicide %>%
+  filter(disposition_situation == "unsolved") %>%
+  nrow()
+total_homicide
+
+total_homicides =
+  homicide %>%
+  group_by(city_state) %>%  
+  summarize(
+    n_obs = n()) %>%
+  arrange(desc(n_obs))
+total_homicides
+
+unsoved_homicides = 
+  homicide %>%
+  filter(disposition_situation == "unsolved") %>%
+  group_by(city_state) %>%  
+  summarize(
+    n_obs = n()) %>%
+  arrange(desc(n_obs))
+unsoved_homicides
+```
